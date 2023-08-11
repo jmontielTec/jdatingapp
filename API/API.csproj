@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <!-- <Nullable>enable</Nullable> -->
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>81110267-3369-4f6c-85a8-e46e8baf12da</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
