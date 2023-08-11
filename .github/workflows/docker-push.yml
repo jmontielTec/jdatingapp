@@ -26,7 +26,8 @@ jobs:
         with:
           context: "{{defaultContext}}:API"
           push: true
-          tags: jmontiel/datingapp:latest
+          tags: jmontiel1603/datingapp:latest
+          
   # deploy:
   #     needs: docker
   #     name: Deploy app
