@@ -6,9 +6,14 @@ export function getPaginationResult<T>(url, params, http: HttpClient) {
   const paginatedResult: PaginatedResult<T> = new  PaginatedResult<T>();
   return http.get<T>(url, { observe: 'response', params }).pipe(
     map(response => {
-      paginatedResult.result = response.body;
-      if (response.headers.get('Pagination') !== null) {
-         paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
+      if (response.body) {
+        paginatedResult.result = response.body;
+      }
+
+      let pagination = response.headers.get('Pagination');
+
+      if (pagination) {
+         paginatedResult.pagination = JSON.parse(pagination);
       }
       return paginatedResult;
     })

@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { ToastrService } from 'ngx-toastr';
-import { BehaviorSubject } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { BehaviorSubject, take } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { User } from '../_models/user';
 
@@ -31,17 +30,17 @@ export class PresenceService {
     .catch(error => console.log(error));
 
     this.hubConnection.on('UserIsOnline', username => {
-      this.onlineUsers$.pipe(take(1)).subscribe(usernames => {
-        this.onlineUsersSource.next([...usernames, username]);
+      this.onlineUsers$.pipe(take(1)).subscribe({
+        next: usernames => this.onlineUsersSource.next([...usernames, username])
       })
-      // this.toastr.info(username + ' has connected');
+      this.toastr.info(username + ' has connected');
     });
 
     this.hubConnection.on('UserIsOffline', username => {
-      this.onlineUsers$.pipe(take(1)).subscribe(usernames => {
-        this.onlineUsersSource.next([...usernames.find(x => x !== username)]);
+      this.onlineUsers$.pipe(take(1)).subscribe({
+        next: usernames => this.onlineUsersSource.next([...usernames.filter(x => x !== username)])
       })
-      // this.toastr.warning(username + ' has disconnected')
+      this.toastr.warning(username + ' has disconnected')
     });
 
     this.hubConnection.on('GetOnlineUsers', (usernames: string[]) =>{
@@ -49,7 +48,7 @@ export class PresenceService {
     });
 
     this.hubConnection.on('NewMessageReceived', ({userName, knownAs}) => {
-      this.toastr.info(knownAs + ' has send you a new message!')
+      this.toastr.info(knownAs + ' has send you a new message!  Click me to see it!')
       .onTap
       .pipe(take(1))
       .subscribe(() => this.router.navigateByUrl('/members/' + userName + '?tab=3'));
@@ -58,9 +57,6 @@ export class PresenceService {
   }
 
   stopHubConnection(){
-    this.hubConnection.stop().catch(error => console.log(error));
+    this.hubConnection?.stop().catch(error => console.log(error));
   }
-
-
-
 }

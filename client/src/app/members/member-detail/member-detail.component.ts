@@ -22,9 +22,9 @@ import { MemberMessagesComponent } from '../member-messages/member-messages.comp
   imports: [GalleryModule, TabsModule, CommonModule, TimeagoModule, MemberMessagesComponent]
 })
 export class MemberDetailComponent implements OnInit, OnDestroy {
-  @ViewChild('memberTabs', {static:true}) memberTabs:TabsetComponent;
-  member:Member;
-  activeTab: TabDirective;
+  @ViewChild('memberTabs', {static:true}) memberTabs?:TabsetComponent;
+  member:Member = {} as Member;
+  activeTab?: TabDirective;
   messages: Message[] = [];
   user: User;
   images: GalleryItem[] = [];
@@ -62,13 +62,15 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
   }
 
   loadMessages(){
-    this.messageService.getMessageThread(this.member.userName).subscribe(messages => {
-      this.messages = messages;
-    });
+    this.messageService.getMessageThread(this.member.userName).subscribe({
+        next: messages => this.messages = messages
+      });
   }
 
   selectTab(tabId:number){
-    this.memberTabs.tabs[tabId].active = true;
+    if (this.memberTabs) {
+      this.memberTabs.tabs[tabId].active = true;
+    }
   }
 
   onTabActivaded(data: TabDirective){

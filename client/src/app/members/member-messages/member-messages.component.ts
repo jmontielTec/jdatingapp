@@ -14,7 +14,7 @@ import { MessageService } from 'src/app/_services/message.service';
   standalone: true,
   imports:[CommonModule, FormsModule, TimeagoModule]
 })
-export class MemberMessagesComponent implements OnInit {
+export class MemberMessagesComponent{
   @ViewChild('messageForm') messageForm: NgForm;
   @Input() messages: Message[];
   @Input() username: string;
@@ -23,15 +23,10 @@ export class MemberMessagesComponent implements OnInit {
 
   constructor(public messageService: MessageService) { }
 
-  ngOnInit(): void {
-  }
-
   sendMessage() {
     this.loading = true;
     this.messageService.sendMessages(this.username, this.messageContent).then(() => {
       this.messageForm.reset();
     }).finally(() => this.loading = false);
   }
-
-
 }
